@@ -1,29 +1,63 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bootstrap demo</title>
+    <title>Blood Bank</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo3.jpg' %}" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+    <style>
+      .carousel-control-prev-icon,
+      .carousel-control-next-icon {
+        background-color: red !important;
+        border-radius: 50%; /* Make the icons circular */
+        width: 30px; /* Adjust the width to your preference */
+        height: 30px; /* Adjust the height to your preference */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar bg-body-tertiary">
       <div class="container-fluid px-5">
         <div>
-          <a class="navbar-brand" href="{% url 'home' %}"> Blood Bank</a>
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <img
+              src="{% static 'logo2.jpeg' %}"
+              alt="Library Logo"
+              height="50px"
+              class="rounded-pill"
+            />
+            Blood Bank</a
+          >
           <a class="btn btn-outline-secondary" href="{% url 'home' %}">Home</a>
         </div>
         <div class="d-flex" role="search">
           {% if request.user.is_authenticated %}
-
-          <a class="btn btn-outline-success mx-4" href="{% url 'home' %}"
-            >Profile</a
+          <a
+            class="btn btn-outline-success mx-4"
+            href="{% url 'user_dashboard' %}"
+            >Dashboard</a
           >
+
+          <a
+            class="btn btn-outline-success mx-4"
+            href="{% url 'create_userdetails' %}"
+            >Add Donor's Details
+          </a>
+          <a
+            class="btn btn-outline-success mx-4"
+            href="{% url 'create_donation_event' %}"
+            >Create Requests For blood
+          </a>
 
           <a class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
 
@@ -46,6 +80,9 @@
     </div>
 
     {% endfor %} {% endif %} {% block content %} {% endblock %}
+
+    <!-- footer.html -->
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

@@ -1,0 +1,15 @@
+<!-- blood_requests.html -->
+{% extends 'base.html' %} {% block content %}
+<h2>Blood Requests</h2>
+<ul>
+  {% for event in donation_events %}
+  <li>
+    {{ event.bloodgroup }} - {{ event.details }}
+    <form method="post" action="{% url 'accept_request' event.id %}">
+      {% csrf_token %}
+      <button type="submit">Accept</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

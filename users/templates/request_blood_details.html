@@ -1,0 +1,14 @@
+<!-- request_blood_details.html -->
+
+{% extends "base.html" %} {% block content %} {% load crispy_forms_tags %}
+<h2>Request Blood Details</h2>
+
+<p>You are requesting blood from:</p>
+<p><strong>{{ donor.name }}</strong> ({{ donor.bloodgroup }} blood group)</p>
+<p>Age: {{ donor.age }}, Address: {{ donor.address }}</p>
+
+<form style="width: 50%; margin: auto" method="post">
+  {% csrf_token %} {{form | crispy}}
+  <button class="btn btn-warning">Submit</button>
+</form>
+{% endblock %}

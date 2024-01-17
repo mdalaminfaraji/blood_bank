@@ -1,0 +1,13 @@
+<!-- donation_history.html -->
+{% extends 'base.html' %} {% block content %}
+<h2>Donation History</h2>
+<ul>
+  {% for history in donation_history %}
+  <li>
+    {{ history.event.bloodgroup }} - {{ history.event.details }}
+    <p></p>
+    {% if history.successful %}Successful{% else %}Cancelled{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

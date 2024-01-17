@@ -1,0 +1,10 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Accept Donation Event</h2>
+<p>{{ event.bloodgroup }} Donation Event</p>
+<p>{{ event.details }}</p>
+<p>Creator: {{ event.creator.username }}</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Accept Event</button>
+</form>
+{% endblock %}

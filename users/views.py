@@ -1,5 +1,6 @@
 from django.views import View
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -10,8 +11,34 @@ from .forms import UserRegistrationForm
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.forms import AuthenticationForm
 from rest_framework.authtoken.models import Token
+from django.db.models import Q
+from blood.models import DonationEvent
+from blood.models import UserDetails, DonationHistory
+from blood.forms import DonationEventForm
+from django.utils import timezone
+
+from django.contrib import messages
+
 def home(request):
-    return render(request, "home.html")
+    blood_group_filter = request.GET.get('blood_group', '')
+    search_query = request.GET.get('search', '')
+    available_donors = UserDetails.objects.filter(availability_for_donation=True)
+    donation_events = DonationEvent.objects.all()
+
+    if blood_group_filter:
+        donation_events = donation_events.filter(bloodgroup=blood_group_filter)
+        available_donors=available_donors.filter(bloodgroup=blood_group_filter)
+
+    if search_query:
+        donation_events = donation_events.filter(
+            Q(bloodgroup__icontains=search_query) |
+            Q(details__icontains=search_query) |
+            Q(creator__username__icontains=search_query)
+        )    
+        available_donors = available_donors.filter(
+            Q(bloodgroup__icontains=search_query) 
+        )    
+    return render(request, "home.html",  {'donation_events': donation_events, 'blood_group_filter': blood_group_filter, 'search_query': search_query, 'available_donors': available_donors})
 
 class RegistrationView(View):
     template_name = 'registration.html'
@@ -45,7 +72,27 @@ class RegistrationView(View):
             return redirect('login')
 
         return render(request, self.template_name, {'form': form})
+    
+    
+@login_required
+def request_blood(request, user_id):
+    donor = get_object_or_404(UserDetails, user__id=user_id, availability_for_donation=True)
+    if request.method == 'POST':
+        donor.availability_for_donation = False
+        donor.last_donation_date = timezone.now()
+        donor.save()
+        
+        DonationHistory.objects.create(
+        donor=request.user,
+        recipient=donor.user,
+        donation_date=timezone.now(),
+        successful=True
+        )
+        messages.success(request, 'Your blood request was successful! Thank you for your contribution.')
 
+        return redirect('home')
+
+    return render(request, 'request_blood_details.html', {'donor': donor})
     
 class ConfirmationView(View):
     template_name = 'confirmation_email.html'

@@ -1,4 +1,227 @@
-{% extends "base.html" %} {% block content %}
-<h1>home page</h1>
+{% extends "base.html" %} {% load static %}{% load crispy_forms_tags %} {% block content %}
+<div id="carouselExampleCaptions" class="carousel slide ">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'slider1.jpeg' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block text-success">
+              <h5>Donate Blood Today</h5>
+              <p>"The finest gesture one can make is to save life by donating blood.".</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'slider1.jpeg' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block text-success">
+              <h5>Join the Blood Donation Drive</h5>
+              <p>"To give blood, you need neither extra strength nor extra food, and you will save a life."</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'slider1.jpeg' %}" class="d-block w-100" alt="...">
+            <div class="carousel-caption d-none d-md-block text-success">
+              <h5>Support the Blood Donation Cause</h5>
+              <p>"A life may depend on a gesture from you, a bottle of Blood."</p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon text-primary" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon text-primary" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
+
+
+
+  
+      <h3 class="text-center">Some Quote For Blood Bank</h3>
+      <hr class="w-25  mx-auto"/>
+        <div class="d-flex flex-wrap justify-content-center ms-5 mt-5 ">
+          <div class="card m-3 col-sm-12 col-md-6 col-lg-6 col-xl-4" style="width: 22rem; height: 18rem">
+            <img
+              src="{% static 'card1.jpeg' %}"
+              class="card-img-top img-fluid h-75"
+              alt="..."
+            />
+            <div class="card-body">
+              <h5 class="card-title">
+                <a
+                
+                  class="text-decoration-none text-dark"
+                  >Join the Blood Donation Drive</a
+                >
+              </h5>
+
+  
+            </div>
+          </div>
+          <div class="card m-3 col-sm-12 col-md-6 col-lg-6 col-xl-4" style="width: 22rem; height: 18rem">
+            <img
+              src="{% static 'card2.jpg' %}"
+              class="card-img-top img-fluid h-75"
+              alt="..."
+            />
+            <div class="card-body">
+              <h5 class="card-title">
+                <a
+           
+                  class="text-decoration-none text-dark"
+                  >Support the Blood Donation Cause</a
+                >
+              </h5>
+  
+            </div>
+          </div>
+          <div class="card m-3 col-sm-12 col-md-6 col-lg-6 col-xl-4" style="width: 22rem; height: 18rem">
+            <img
+              src="{% static 'card3.jpg' %}"
+              class="card-img-top img-fluid h-75"
+              alt="..."
+            />
+            <div class="card-body">
+              <h5 class="card-title">
+                <a
+
+                  class="text-decoration-none text-dark"
+                  >Participate in our Blood Donor Initiative</a
+                >
+              </h5>
+    
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+<h2 class="text-center my-2">Available Donor Lists</h2>
+<hr class="w-25  mx-auto"/>
+
+<div class="row justify-content-center">
+        <form method="get" action="{% url 'home' %}" class="col-md-3 mb-3">
+                <div class="row justify-content-center">
+                      <div class="col-md-9 mb-3">
+                        <label for="blood_group">Filter by Blood Group:</label>
+                              <select class="form-control" name="blood_group" id="blood_group">
+                                      <option value="" {% if not blood_group_filter %}selected{% endif %}>All</option>
+                                      <option value="O+" {% if blood_group_filter == 'O+' %}selected{% endif %}>O+</option>
+                                      <option value="O-" {% if blood_group_filter == 'O-' %}selected{% endif %}>O-</option>
+                                      <option value="A+" {% if blood_group_filter == 'A+' %}selected{% endif %}>A+</option>
+                                      <option value="A-" {% if blood_group_filter == 'A-' %}selected{% endif %}>A-</option>
+                                      <option value="B+" {% if blood_group_filter == 'B+' %}selected{% endif %}>B+</option>
+                                      <option value="B-" {% if blood_group_filter == 'B-' %}selected{% endif %}>B-</option>
+                                      <option value="AB+" {% if blood_group_filter == 'AB+' %}selected{% endif %}>AB+</option>
+                                      <option value="AB-" {% if blood_group_filter == 'AB-' %}selected{% endif %}>AB-</option>
+                              </select>
+                      </div>
+                      <div class="col-md-3 mt-4">
+                      
+                         <button type="submit" class="btn btn-primary btn-block">Filter</button>
+                      </div>
+                  </div>
+        </form>
+
+                  <!-- Search Form -->
+        <form method="get" action="{% url 'home' %}" class="col-md-3 mb-3">
+         <div class="form-group row justify-content-center" >
+                <div  class="col-md-9 mb-3">
+                <label for="search">Search:</label>
+                <input type="text" class="form-control" name="search" id="search" placeholder="Search" value="{{ search_query }}">    
+                </div>
+                <div class="col-md-3 mt-4">
+                      
+                        <button type="submit" class="btn btn-primary">Search</button>
+                     </div>
+  
+         </div>
+     
+
+        </form>
+
+
+
+</div>
+
+
+      
+
+      
+{% comment %} 
+{% for event in donation_events %}
+  <div>
+    <h3>{{ event.bloodgroup }} Donation Event</h3>
+    <p>{{ event.details }}</p>
+    <p>Creator: {{ event.creator.username }}</p>
+  {% if user.is_authenticated %}
+      <form method="post" action="{% url 'request_blood' event.id %}">
+        {% csrf_token %}
+        <button type="submit">Request Blood</button>
+      </form>
+    {% endif %} 
+  </div>
+{% endfor %} {% endcomment %}
+
+
+
+
+
+
+
+  {% if user.is_authenticated %}
+    <h2 class="text-center my-2">Welcome, {{ user.username }}!</h2>
+    <hr class="w-25  mx-auto"/>
+  {% else %}
+    <h2 class="text-center my-2">Sign in to request blood from available donors.</h2>
+    <hr class="w-25  mx-auto"/>
+  {% endif %}
+
+  {% if available_donors %}
+    <div class="d-flex flex-wrap justify-content-center ms-5 mt-5 ">
+      {% for donor in available_donors %}
+      <div class="card col-sm-12 col-md-6 col-lg-6 col-xl-4 mx-2" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title"><strong>{{ donor.name }}</strong> ({{ donor.bloodgroup }} blood group)</h5>
+          <h6 class="card-subtitle mb-2 text-body-secondary"> Age: {{ donor.age }}, Address: {{ donor.address }}</h6>
+
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'request_blood' donor.user.id %}">
+              {% csrf_token %} 
+              <button type="submit" class="btn btn-outline-primary">Request Blood</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+        {% comment %} <li>
+          <strong>{{ donor.name }}</strong> ({{ donor.bloodgroup }} blood group)
+          <br>
+          Age: {{ donor.age }}, Address: {{ donor.address }}
+          <br>
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'request_blood' donor.user.id %}">
+              {% csrf_token %}
+              <button type="submit">Request Blood</button>
+            </form>
+          {% endif %}
+        </li> {% endcomment %}
+      {% endfor %}
+   </div>
+  {% else %}
+    <p class="text-center my-2">No available donors at the moment.</p>
+  {% endif %}
+
+  <footer class="bg-light text-black text-center py-3 mt-4">
+        <div class="container">
+          <p>&copy; 2024 Our Blood Bank. All rights reserved.</p>
+        </div>
+      </footer>
 
 {% endblock %}

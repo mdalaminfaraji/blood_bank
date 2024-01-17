@@ -1,0 +1,62 @@
+<!-- user_dashboard.html -->
+{% extends 'base.html' %} {% block content %}
+
+<!-- Ongoing Donation Events -->
+<h3 class="text-center mt-5">Ongoing Recipient Requests</h3>
+<hr class="w-25 mx-auto" />
+
+<table class="table table-bordered container text-center">
+  <thead>
+    <tr>
+      <th>Blood Group</th>
+      <th>Details</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for event in donation_events %} {% if event.is_get_blood == False %}
+    <tr>
+      <td>{{ event.bloodgroup }}</td>
+      <td>{{ event.details }}</td>
+      <td>
+        <form method="post" action="{% url 'accept_request' event.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success">Accept</button>
+        </form>
+      </td>
+    </tr>
+    {% endif %} {% endfor %}
+  </tbody>
+</table>
+
+<!-- Donation History -->
+<h3 class="text-center">Donation History</h3>
+<hr class="w-25 mx-auto" />
+{% if donation_history %}
+<div class="d-flex flex-wrap justify-content-center ms-5 mt-5">
+  {% for history in donation_history %}
+  <div
+    class="card col-sm-12 col-md-6 col-lg-6 col-xl-4 mx-2"
+    style="width: 25rem"
+  >
+    <div class="card-body">
+      <h5 class="card-title">
+        Donation From : {{ history.donor.username }} To:
+        {{history.recipient.username }}
+      </h5>
+      <h5>Donatain Date: {{history.donation_date }}</h5>
+      <h5>Recipents Email: {{history.recipient.email }}</h5>
+      <h5>
+        <strong>Status: </strong>
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+          {% if history.successful %}Successful{% else %}Cancelled{% endif %}
+        </button>
+      </h5>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-center my-2">No available history at the moment.</p>
+{% endif %} {% endblock %}
