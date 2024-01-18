@@ -59,7 +59,7 @@ class RegistrationView(View):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             # Construct confirmation link
-            confirm_link = f"http://127.0.0.1:8000/confirm/{uid}/{token}"
+            confirm_link = f"https://blood-bank-z8ix.onrender.com/confirm/{uid}/{token}"
 
             # Email subject and body
             email_subject = "Confirm Your Registration"
