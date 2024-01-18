@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-# CSRF_TRUSTED_ORIGINS = ['https://library-management-yn74.onrender.com', 'https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://blood-bank-z8ix.onrender.com', 'https://*.127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
