@@ -44,7 +44,7 @@
   
       <h3 class="text-center">Some Quote For Blood Bank</h3>
       <hr class="w-25  mx-auto"/>
-        <div class="d-flex flex-wrap justify-content-center ms-5 mt-5 ">
+        <div class="d-flex flex-wrap justify-content-center  mt-5 ">
           <div class="card m-3 col-sm-12 col-md-6 col-lg-6 col-xl-4" style="width: 22rem; height: 18rem">
             <img
               src="{% static 'card1.jpeg' %}"
@@ -106,10 +106,10 @@
 <h2 class="text-center my-2">Available Donor Lists</h2>
 <hr class="w-25  mx-auto"/>
 
-<div class="row justify-content-center">
-        <form method="get" action="{% url 'home' %}" class="col-md-3 mb-3">
-                <div class="row justify-content-center">
-                      <div class="col-md-9 mb-3">
+<div class="d-flex justify-content-evenly">
+         <form method="get" action="{% url 'home' %}" class="  mb-3">
+                <div class="d-flex">
+                      <div class=" mb-3">
                         <label for="blood_group">Filter by Blood Group:</label>
                               <select class="form-control" name="blood_group" id="blood_group">
                                       <option value="" {% if not blood_group_filter %}selected{% endif %}>All</option>
@@ -123,21 +123,21 @@
                                       <option value="AB-" {% if blood_group_filter == 'AB-' %}selected{% endif %}>AB-</option>
                               </select>
                       </div>
-                      <div class="col-md-3 mt-4">
+                      <div class=" mt-4">
                       
                          <button type="submit" class="btn btn-primary btn-block">Filter</button>
                       </div>
                   </div>
-        </form>
+        </form> 
 
                   <!-- Search Form -->
-        <form method="get" action="{% url 'home' %}" class="col-md-3 mb-3">
-         <div class="form-group row justify-content-center" >
-                <div  class="col-md-9 mb-3">
+       <form method="get" action="{% url 'home' %}" class=" mb-3">
+         <div class="form-group d-flex" >
+                <div  class=" mb-3">
                 <label for="search">Search:</label>
                 <input type="text" class="form-control" name="search" id="search" placeholder="Search" value="{{ search_query }}">    
                 </div>
-                <div class="col-md-3 mt-4">
+                <div class=" mt-4">
                       
                         <button type="submit" class="btn btn-primary">Search</button>
                      </div>
@@ -145,30 +145,15 @@
          </div>
      
 
-        </form>
+        </form> 
 
 
 
-</div>
+</div> 
 
 
       
 
-      
-{% comment %} 
-{% for event in donation_events %}
-  <div>
-    <h3>{{ event.bloodgroup }} Donation Event</h3>
-    <p>{{ event.details }}</p>
-    <p>Creator: {{ event.creator.username }}</p>
-  {% if user.is_authenticated %}
-      <form method="post" action="{% url 'request_blood' event.id %}">
-        {% csrf_token %}
-        <button type="submit">Request Blood</button>
-      </form>
-    {% endif %} 
-  </div>
-{% endfor %} {% endcomment %}
 
 
 
@@ -176,7 +161,9 @@
 
 
 
-  {% if user.is_authenticated %}
+
+
+   {% if user.is_authenticated %}
     <h2 class="text-center my-2">Welcome, {{ user.username }}!</h2>
     <hr class="w-25  mx-auto"/>
   {% else %}
@@ -185,7 +172,7 @@
   {% endif %}
 
   {% if available_donors %}
-    <div class="d-flex flex-wrap justify-content-center ms-5 mt-5 ">
+    <div class="d-flex flex-wrap justify-content-center  mt-5 ">
       {% for donor in available_donors %}
       <div class="card col-sm-12 col-md-6 col-lg-6 col-xl-4 mx-2" style="width: 18rem;">
         <div class="card-body">
@@ -200,28 +187,16 @@
           {% endif %}
         </div>
       </div>
-        {% comment %} <li>
-          <strong>{{ donor.name }}</strong> ({{ donor.bloodgroup }} blood group)
-          <br>
-          Age: {{ donor.age }}, Address: {{ donor.address }}
-          <br>
-          {% if user.is_authenticated %}
-            <form method="post" action="{% url 'request_blood' donor.user.id %}">
-              {% csrf_token %}
-              <button type="submit">Request Blood</button>
-            </form>
-          {% endif %}
-        </li> {% endcomment %}
+
       {% endfor %}
    </div>
   {% else %}
     <p class="text-center my-2">No available donors at the moment.</p>
-  {% endif %}
-
-  <footer class="bg-light text-black text-center py-3 mt-4">
+  {% endif %} 
+ <footer class="bg-light text-black text-center py-3 mt-4">
         <div class="container">
           <p>&copy; 2024 Our Blood Bank. All rights reserved.</p>
         </div>
-      </footer>
+      </footer> 
 
 {% endblock %}
