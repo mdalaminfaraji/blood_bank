@@ -80,7 +80,6 @@ def accept_donation_event(request, event_id):
 
 @login_required
 def user_dashboard(request):
-    user_details, created = UserDetails.objects.get_or_create(user=request.user)
     donation_events = DonationEvent.objects.exclude(creator=request.user, is_get_blood=True)
     donation_history = DonationHistory.objects.filter(donor=request.user)
 
