@@ -43,8 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "users",
     "blood",
+    "blog",
     "crispy_forms",
     "crispy_bootstrap5",
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -58,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'blood_bank.urls'
@@ -109,6 +114,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173 ",  # or the address where your React app is running
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Internationalization
@@ -130,7 +140,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     BASE_DIR/ 'static'
 ]
-
+MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = '/media/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

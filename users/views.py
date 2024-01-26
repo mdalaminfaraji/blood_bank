@@ -18,6 +18,141 @@ from blood.forms import DonationEventForm
 from django.utils import timezone
 
 from django.contrib import messages
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import RegistrationSerializer, UserLoginSerializer
+from rest_framework.views import APIView
+
+from django.contrib.auth.models import User
+from .serializers import UserSerializer
+def success_response(data=None, message="Success", code=status.HTTP_200_OK):
+    return Response({
+        "appStatus": True,
+        "appCode": code,
+        "appMessage": message,
+        "data": data
+    }, status=code)
+
+def error_response(errors=None, message="Error", code=status.HTTP_400_BAD_REQUEST):
+    return Response({
+        "appStatus": False,
+        "appCode": code,
+        "appMessage": message,
+        "errors": errors
+    }, status=code)
+
+# class UserListView(generics.ListAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def list(self, request, *args, **kwargs):
+        try:
+            # Retrieve the list of users
+            users = self.get_queryset()
+            serializer = self.get_serializer(users, many=True)
+
+            # Return success response
+            return success_response(data=serializer.data, message="Users retrieved successfully", code=200)
+        
+        except Exception as e:
+            # Return error response if an exception occurs
+            return error_response(errors=str(e), message="Error retrieving users", code=500)    
+    
+class UserRegistrationApiView(APIView):
+    serializer_class = RegistrationSerializer
+    
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        
+        if serializer.is_valid():
+            user = serializer.save()
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            confirm_link = f"http://127.0.0.1:8000/confirm/{uid}/{token}"
+            email_subject = "Confirm Your Email"
+            email_body = render_to_string('confirmation_email.html', {'confirm_link' : confirm_link})
+            
+            email = EmailMultiAlternatives(email_subject , '', to=[user.email])
+            email.attach_alternative(email_body, "text/html")
+            email.send()
+
+            # Return success response
+            return success_response(data="Check your mail for confirmation", message="Registration successful", code=status.HTTP_201_CREATED)
+        
+        # Return error response if validation fails
+        return error_response(errors=serializer.errors, message="Validation failed", code=status.HTTP_400_BAD_REQUEST)
+
+  
+def activate(request, uid64, token):
+    try: # Error handling kortechi. uid, user nao thakte pare tar mane sekhan theke error asar somvabona ache
+    # sejonne code ke try er moddhe rakhlam
+        uid = urlsafe_base64_decode(uid64).decode() # encode kora sei uid ke decode kortechi
+        user = User._default_manager.get(pk=uid) # decode er por je uid pelam seta kon 
+        # user er seta janar jonne ei code ta
+    except(User.DoesNotExist):
+        user = None 
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return redirect('login1')
+    else:
+        return redirect('register')
+    
+class UserLoginApiView(APIView):
+    def post(self, request):
+        serializer = UserLoginSerializer(data = self.request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+
+            user = authenticate(username= username, password=password)
+            
+            if user:
+                token, _ = Token.objects.get_or_create(user=user)
+                print(token)
+                print(_)
+                login(request, user)
+                return Response({'appStatus':True, 'appCode':200, 'appMessage':'Login successful', 'token' : token.key, 'user_id' : user.id}, status=status.HTTP_200_OK)
+            else:
+                # Return error response for invalid credentials
+                return Response({
+                    'appStatus': False,
+                    'appCode': 401,
+                    'appMessage': 'Invalid credentials',
+                    'error': 'Invalid credentials'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({
+            'appStatus': False,
+            'appCode': 400,
+            'appMessage': 'Validation failed',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+class UserLogoutView(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            request.user.auth_token.delete()
+            logout(request)
+
+            # Return success response
+            return Response({
+                'appStatus': True,
+                'appCode': 200,
+                'appMessage': 'Logout successful'
+            }, status=status.HTTP_200_OK)
+        else:
+            # Return error response if the user is not authenticated
+            return Response({
+                'appStatus': False,
+                'appCode': 401,
+                'appMessage': 'User not authenticated',
+                'error': 'User not authenticated'
+            }, status=status.HTTP_401_UNAUTHORIZED)
 
 def home(request):
     blood_group_filter = request.GET.get('blood_group', '')
@@ -122,6 +257,7 @@ class LoginView(View):
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+            print(user)
 
             if user:
                 login(request, user)
